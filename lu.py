@@ -32,21 +32,26 @@ def lu_complete(A):
     L=np.identity(m)
     P=np.identity(m)
 
-    Z=np.zeros([m,n])    
     for k in range(m-1):
         imax,jmax= maxabs_idx(U[k:m,k:n])
+        print("imax=",imax,"  jmax= ",jmax,"   value= ",U[imax+k,jmax+k])
+
+
         # Interchanging Rows
-        temp = U[k,:]
-        Z[k,:]=U[imax,:].copy()
-        Z[imax,:]=temp.copy()
-        Z[k+1:imax,:]=U[k+1:imax,:].copy()    # adding between rows as they were
-                                    # Z is Partial Pivoted matrix of A
-
-        U=Z.copy()
-        for j in range(k+1,m):
-            L[j,k]=U[j,k]
-            U[j,k:m]=U[j,k:m]-L[j,k]*U[k,k:m]
+        temp=U[k,:].copy()
+        print("iternation ",k+1)
+        print(imax,"U[imax] ",U[imax+k,:])
+        print("interchanging with ",U[k,:])
 
 
+        U[k,:]=U[imax+k,:].copy()
+        U[imax+k,:]=temp.copy()
 
+        if len(U[k+1:imax,:])!=0:
+            U[k+1:imax,:]=U[k+1:imax,:].copy()
+        if len(U[imax+1:m+1,:])!=0:
+            U[imax+1:m+1,:]=U[imax+1:m+1,:].copy()
+
+
+        U=U.copy()
     return (P, Q, L, U)
