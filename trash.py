@@ -1,4 +1,5 @@
 import numpy as np
+import numpy as np
 A = np.array([[1, 2, 3, 4], [5, 6, 7, 8],[5, 6, 7, 8],[5, 6, 7, 8],[5, 6, 7, 8],[5, 6, 64, 8],[5, 6, 89, 99]])
 #print(arr)
 #i,j= np.where(arr == arr.max())
@@ -11,14 +12,14 @@ def maxabs_idx(A):
 
 i,j=maxabs_idx(A)
 r,c=A.shape
-P=A.copy()
+Ac=A.copy()                 # Ac for copy of A
 
 Z=np.zeros([r,c])
 # Interchanging Rows
-temp = P[0,:]
-Z[0,:]=P[i,:].copy()
+temp = Ac[0,:]
+Z[0,:]=Ac[i,:].copy()
 Z[i,:]=temp.copy()
-Z[1:i,:]=P[1:i,:].copy()    # adding between rows as they were
+Z[1:i,:]=Ac[1:i,:].copy()    # adding between rows as they were
                             # Z is Partial Pivoted matrix of A
 ZZ=np.zeros([r,c])
 # Interchanging Coloumns
