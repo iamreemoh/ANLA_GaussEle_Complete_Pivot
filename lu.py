@@ -30,6 +30,19 @@ def lu_complete(A):
     _A_=A.copy()                 # _A_ for copy of A
     _A_.astype(np.float64)
 
+    #-----------------------------For Zero Diagonal element----------------------
+    for i in range(m):
+        if _A_[i,i]==0:
+            if i!=m-1:
+                const=_A_[i,:].copy()
+                _A_[i,:]=_A_[i+1,:]
+                _A_[i+1,:]=const
+            else:
+                const=_A_[i,:].copy()
+                _A_[i,:]=_A_[i-1,:]
+                _A_[i-1,:]=const
+    #----------------------------------------------------------------------------
+
     for k in range(m-1):
         imax,jmax= maxabs_idx(_A_[k:m,k:n])
 

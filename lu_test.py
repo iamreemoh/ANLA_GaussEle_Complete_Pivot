@@ -105,11 +105,11 @@ class LUTest(unittest.TestCase):
         self.check_lu_pivoting_scheme(A)
 
     # todo: implement more tests
-    # def test_02(self):
-    #     A = ...
-    #     self.check_lu(A)
-    #     self.check_lu_complete(A)
-    #     self.check_lu_pivoting_scheme(A)
+    #def test_02(self):
+    #    A = np.array[[0,1,3],[5,2,1],[7,8,9]]
+    #    self.check_lu(A)
+    #    self.check_lu_complete(A)
+    #    self.check_lu_pivoting_scheme(A)
     #
     # def test_03(self)...
 
