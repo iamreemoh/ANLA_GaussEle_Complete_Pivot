@@ -1,7 +1,5 @@
 import numpy as np
 
-A= np.array([[1,1,1],[2,3,5],[4,6,8]])
-
 def lu(A):
     # TODO
     U = A.copy()
