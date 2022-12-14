@@ -15,30 +15,25 @@ def lu(A):
     return (L, U)
 
 def maxabs_idx(A):
-     # TODO
-     i,j= np.where(A == A.max())
-
-     return (int(i), int(j))
+    # TODO
+    i,j= np.unravel_index(A.argmax(), A.shape)
+    return (int(i), int(j))
 
 
 def lu_complete(A):
     #TODO
     m,n=A.shape
     U = np.zeros((m,n))
-    L=np.identity(m, dtype=np.float32)
+    L=np.identity(m, dtype=np.float64)
     P=np.identity(m)
-    Z=np.zeros((m,m),dtype=np.float32)
+    Z=np.zeros((m,m),dtype=np.float64)
     Q = np.identity(n)
 
     _A_=A.copy()                 # _A_ for copy of A
-    _A_.astype(np.float32)
-
-    V=A.copy()                 # _A_ for copy of A
-    V.astype(np.float32)
+    _A_.astype(np.float64)
 
     for k in range(m-1):
         imax,jmax= maxabs_idx(_A_[k:m,k:n])
-        #imax,jmax= maxabs_idx(V[k:m,k:n])
 
         #--------------------OOPERATION ON _A_-----------------------------------
         # Interchanging Rows
@@ -69,13 +64,10 @@ def lu_complete(A):
         #------------------------- OPERATION ON L----------------------------------------
         Z[k+1:,k]=np.add(Z[k+1:,k],_A_[k+1:,k])
 
-        #print("iteration ",k,", Z[k+1:,k] =",Z[k+1:,k],"  _A_[k,k]  =",_A_[k,k])
         L[k+1:,k]=np.divide(Z[k+1:,k],_A_[k,k])
 
 
         #---------------------------OPERATION ON _A_-----------------------------------------
-    #print(_A_)
-    #print("\n")
     
     for k in range(m-1):
         imax,jmax= maxabs_idx(_A_[k:m,k:n])
