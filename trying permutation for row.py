@@ -20,7 +20,7 @@ m,n=A.shape
 def lu_complete(A):
     #TODO
     m,n=A.shape
-    U = None
+    U = np.zeros((m,n))
     L=np.identity(m, dtype=np.float32)
     P=np.identity(m)
     Z=np.zeros((m,m),dtype=np.float32)
@@ -100,12 +100,12 @@ def lu_complete(A):
         if len(Q[:,jmax+1:n+1])!=0:
             Q[:,jmax+1:n+1]=Q[:,jmax+1:n+1].copy()
 
-    print(L)
-    print("\n")
-    print(_A_)
-    print("\n")
-    U=np.multiply(L,_A_)
-    print(A)
+    
+    for i in range(m):
+    # iterate through columns of Y
+        for j in range(n):
+            # iterate through rows of Y
+            for k in range(m):
+                U[i][j] += L[i][k] * _A_[k][j]
 
     return (P, Q, L, U)
-lu_complete(A)
