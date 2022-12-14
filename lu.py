@@ -23,35 +23,93 @@ def maxabs_idx(A):
 
 def lu_complete(A):
     #TODO
-    U = None
-    L = None
-    P = None
-    Q = None
     m,n=A.shape
-    U=A.copy()                 # U for copy of A
-    L=np.identity(m)
+    U = np.zeros((m,n))
+    L=np.identity(m, dtype=np.float32)
     P=np.identity(m)
+    Z=np.zeros((m,m),dtype=np.float32)
+    Q = np.identity(n)
+
+    _A_=A.copy()                 # _A_ for copy of A
+    _A_.astype(np.float32)
+
+    V=A.copy()                 # _A_ for copy of A
+    V.astype(np.float32)
 
     for k in range(m-1):
-        imax,jmax= maxabs_idx(U[k:m,k:n])
-        print("imax=",imax,"  jmax= ",jmax,"   value= ",U[imax+k,jmax+k])
+        imax,jmax= maxabs_idx(_A_[k:m,k:n])
+        #imax,jmax= maxabs_idx(V[k:m,k:n])
 
-
+        #--------------------OOPERATION ON _A_-----------------------------------
         # Interchanging Rows
-        temp=U[k,:].copy()
-        print("iternation ",k+1)
-        print(imax,"U[imax] ",U[imax+k,:])
-        print("interchanging with ",U[k,:])
+        temp=_A_[k,:].copy()
+        _A_[k,:]=_A_[imax+k,:].copy()
+        _A_[imax+k,:]=temp.copy()
+
+        if len(_A_[k+1:imax,:])!=0:
+            _A_[k+1:imax,:]=_A_[k+1:imax,:].copy()
+        if len(_A_[imax+1:m+1,:])!=0:
+            _A_[imax+1:m+1,:]=_A_[imax+1:m+1,:].copy()
+
+        _A_=_A_.copy()
+        
+        #---------------^^^^^^^----OOPERATION ON _A_-------------^^^^^^^^^------------------
+
+        #------------------------- OPERATION ON P----------------------------------------
+        temp=P[k,:].copy()
+        P[k,:]=P[imax+k,:].copy()
+        P[imax+k,:]=temp.copy()
+        if len(P[k+1:imax,:])!=0:
+            P[k+1:imax,:]=P[k+1:imax,:].copy()
+        if len(P[imax+1:m+1,:])!=0:
+            P[imax+1:m+1,:]=P[imax+1:m+1,:].copy()
+        
+        #----------------^^^^^^--- OPERATION ON P---------------^^^^^^^^^------------------
+        
+        #------------------------- OPERATION ON L----------------------------------------
+        Z[k+1:,k]=np.add(Z[k+1:,k],_A_[k+1:,k])
+
+        #print("iteration ",k,", Z[k+1:,k] =",Z[k+1:,k],"  _A_[k,k]  =",_A_[k,k])
+        L[k+1:,k]=np.divide(Z[k+1:,k],_A_[k,k])
 
 
-        U[k,:]=U[imax+k,:].copy()
-        U[imax+k,:]=temp.copy()
+        #---------------------------OPERATION ON _A_-----------------------------------------
+    #print(_A_)
+    #print("\n")
+    
+    for k in range(m-1):
+        imax,jmax= maxabs_idx(_A_[k:m,k:n])
 
-        if len(U[k+1:imax,:])!=0:
-            U[k+1:imax,:]=U[k+1:imax,:].copy()
-        if len(U[imax+1:m+1,:])!=0:
-            U[imax+1:m+1,:]=U[imax+1:m+1,:].copy()
+        temp=_A_[:,k].copy()
 
+        _A_[:,k]=_A_[:,jmax+k].copy()
+        _A_[:,jmax+k]=temp.copy()
 
-        U=U.copy()
+        if len(_A_[:,k+1:jmax])!=0:
+            _A_[:,k+1:jmax]=_A_[:,k+1:jmax].copy()
+        if len(_A_[:,jmax+1:n+1])!=0:
+            _A_[:,jmax+1:n+1]=_A_[:,jmax+1:n+1].copy()
+
+        _A_=_A_.copy()
+        #--------------------^^^^^^^--OPERATION ON _A_---^^^^^^^^------------------------------
+        #-----------------------------OPERATION ON Q-----------------------------------------
+
+        temp=Q[:,k].copy()
+
+        Q[:,k]=Q[:,jmax+k].copy()
+        Q[:,jmax+k]=temp.copy()
+
+        if len(Q[:,k+1:jmax])!=0:
+            Q[:,k+1:jmax]=Q[:,k+1:jmax].copy()
+        if len(Q[:,jmax+1:n+1])!=0:
+            Q[:,jmax+1:n+1]=Q[:,jmax+1:n+1].copy()
+
+    
+    for i in range(m):
+    # iterate through columns of Y
+        for j in range(n):
+            # iterate through rows of Y
+            for k in range(m):
+                U[i][j] += L[i][k] * _A_[k][j]
+
     return (P, Q, L, U)
